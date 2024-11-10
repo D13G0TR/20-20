@@ -1,20 +1,37 @@
 import mysql from "mysql";
+import dotenv from "dotenv";
 
-// Configuración de la base de datos
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '123456',
-    database: 'restaurante'
+dotenv.config();
+
+// Configuración del pool de conexiones
+const pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '123456',
+    database: process.env.DB_NAME || 'restaurante',
+    connectionLimit: 10,
+    waitForConnections: true,
+    queueLimit: 0
 });
 
-// Conexión a la base de datos
-connection.connect((err) => {
+// Verificar la conexión
+pool.getConnection((err, connection) => {
     if (err) {
         console.error('Error al conectar a la base de datos:', err);
-        return;
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            console.error('Se perdió la conexión con la base de datos.');
+        }
+        if (err.code === 'ER_CON_COUNT_ERROR') {
+            console.error('La base de datos tiene demasiadas conexiones.');
+        }
+        if (err.code === 'ECONNREFUSED') {
+            console.error('La conexión a la base de datos fue rechazada.');
+        }
     }
-    console.log('Conexión a la base de datos establecida');
+    if (connection) {
+        console.log('Conexión a la base de datos establecida');
+        connection.release();
+    }
 });
 
-export default connection;
+export default pool;

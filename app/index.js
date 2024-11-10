@@ -3,11 +3,15 @@ import session from "express-session";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import dotenv from "dotenv";
+
+// Cargar variables de entorno
+dotenv.config();
 
 // Importar rutas
 import loginRouter from "./public/login.js";
 import registerRouter from "./public/register.js";
-import oneScreenRouter from "./public/OneScreen.js"; // Añadimos esta importación
+import oneScreenRouter from "./public/OneScreen.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,13 +29,13 @@ app.use(express.json());
 
 // Configuración de sesiones
 app.use(session({
-    secret: "tu_secreto_aqui",
+    secret: process.env.SESSION_SECRET || "default_secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, // Cambiado a false para desarrollo local
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000 // 1 día
     }
 }));
 
@@ -50,13 +54,13 @@ app.use('/Imagenes', express.static(path.join(__dirname, 'public/Imagenes')));
 
 // Rutas principales
 app.get('/', isAuthenticated, (req, res) => {
-    res.redirect('/dashboard'); // Redirige a /dashboard si está autenticado
+    res.redirect('/dashboard');
 });
 
 // Usar rutas
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
-app.use("/dashboard", isAuthenticated, oneScreenRouter); // Protegemos la ruta del dashboard
+app.use("/dashboard", isAuthenticated, oneScreenRouter);
 
 // Manejador de errores 404
 app.use((req, res) => {

@@ -16,8 +16,7 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
     try {
         const { email, contraseña } = req.body;
-        
-        // Buscar usuario por email
+
         connection.query(
             "SELECT * FROM Usuarios WHERE Email = ?",
             [email],
@@ -32,18 +31,13 @@ router.post("/", async (req, res) => {
                 }
 
                 const user = results[0];
-
-                // Verificar contraseña
                 const validPassword = await bcrypt.compare(contraseña, user.Contraseña);
                 if (!validPassword) {
                     return res.render("login", { error: "Credenciales incorrectas" });
                 }
 
-                // Establecer sesión
                 req.session.userId = user.id;
                 req.session.userRole = user.Rol;
-
-                // Redirigir al dashboard
                 res.redirect("/dashboard");
             }
         );

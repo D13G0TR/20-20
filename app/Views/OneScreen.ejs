@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veinte&Veinte</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate.css para animaciones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #173B45;
+            --accent-color: #FF8225;
+            --danger-color: #B43F3F;
+        }
+
+        body {
+            background-image: url('/Imagenes/barra-20.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center center;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background-color: var(--primary-color);
+            height: 100vh;
+            position: fixed;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .main-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-link {
+            color: #F8EDED !important;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .nav-link:hover {
+            background-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .product-table {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .btn-add {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add:hover {
+            background-color: #e67420;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons button {
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .logo {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 30px auto;
+            animation: fadeIn 1s ease-in;
+        }
+
+        /* Animaciones personalizadas */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                height: auto;
+                position: static;
+            }
+            
+            .main-content {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Barra lateral -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <img src="/Imagenes/Logo.png" alt="Logo" class="logo">
+                <nav>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="prueba.html">
+                                <i class="fas fa-home"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#">
+                                <i class="fas fa-box-open"></i>Productos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#">
+                                <i class="fas fa-truck"></i>Proveedores
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="register.html">
+                                <i class="fas fa-user-plus"></i>Registro
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="login.html">
+                                <i class="fas fa-sign-in-alt"></i>Login
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="col-md-9 col-lg-10 ms-auto">
+                <main class="main-content animate__animated animate__fadeIn">
+                    <header class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h2 fw-bold">Productos en Inventario</h1>
+                            <p>Bienvenido, <%= user.Nombre %> <%= user.Apellido %></p>
+                        </div>
+                        <button class="btn btn-add">
+                            <i class="fas fa-plus me-2"></i>Agregar Producto
+                        </button>
+                    </header>
+
+                    <div class="table-responsive product-table">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col">#ID</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Categoría</th>
+                                    <th scope="col">Stock</th>
+                                    <th scope="col">Precio</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% productos.forEach(producto => { %>
+                                    <tr>
+                                        <td><%= producto.id %></td>
+                                        <td><%= producto.Nombre %></td>
+                                        <td><%= producto.Categoria %></td>
+                                        <td><%= producto.Stock %></td>
+                                        <td>$<%= producto.Precio %></td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn-edit me-2">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn-delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>

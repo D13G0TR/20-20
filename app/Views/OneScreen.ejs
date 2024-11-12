@@ -207,9 +207,10 @@
                                 <tr>
                                     <th scope="col">#ID</th>
                                     <th scope="col">Nombre</th>
-                                    <th scope="col">Categoría</th>
+                                    <th scope="col">Código</th>
+                                    <th scope="col">Proveedor</th>
                                     <th scope="col">Stock</th>
-                                    <th scope="col">Precio</th>
+                                    <th scope="col">Precio Unitario</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
@@ -218,9 +219,10 @@
                                     <tr>
                                         <td><%= producto.id %></td>
                                         <td><%= producto.Nombre %></td>
-                                        <td><%= producto.Categoria %></td>
+                                        <td><%= producto.Codigo %></td>
+                                        <td><%= producto.NombreProveedor || 'Sin proveedor' %></td>
                                         <td><%= producto.Stock %></td>
-                                        <td>$<%= producto.Precio %></td>
+                                        <td>$<%= producto.PrecioUnitario.toFixed(2) %></td>
                                         <td>
                                             <div class="action-buttons">
                                                 <button class="btn-edit me-2">

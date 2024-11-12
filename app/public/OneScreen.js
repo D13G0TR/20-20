@@ -10,7 +10,8 @@ router.get("/", async (req, res) => {
 
         res.render("OneScreen", {
             user: user,
-            productos: productos
+            productos: productos,
+            vistaActual: req.query.vista || 'inicio'
         });
     } catch (error) {
         console.error("Error en OneScreen:", error);
@@ -30,9 +31,29 @@ const getUserById = (userId) => {
 
 const getProductos = () => {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM Productos', (error, results) => {
+        const query = `
+            SELECT 
+                p.id,
+                p.Nombre,
+                p.Codigo,
+                p.Stock,
+                CAST(p.PrecioUnitario AS DECIMAL(10,2)) as PrecioUnitario,
+                pr.Empresa as NombreProveedor 
+            FROM Productos p 
+            LEFT JOIN Proveedores pr ON p.Proveedor = pr.id
+        `;
+        
+        connection.query(query, (error, results) => {
             if (error) return reject(new Error('Error al obtener productos: ' + error.message));
-            resolve(results);
+            
+            // Convertir los resultados y asegurarse de que PrecioUnitario sea un número
+            const processedResults = results.map(producto => ({
+                ...producto,
+                PrecioUnitario: Number(producto.PrecioUnitario)
+            }));
+            
+            console.log('Productos recuperados:', processedResults);
+            resolve(processedResults);
         });
     });
 };

@@ -106,4 +106,19 @@ router.post("/agregar-producto", async (req, res) => {
     }
 });
 
+router.get("/logout", (req, res) => {
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Error al cerrar sesión:", err);
+                return res.status(500).render("error", { message: "Error al cerrar sesión" });
+            }
+            res.redirect("/login");
+        });
+    } catch (error) {
+        console.error("Error en el servidor:", error);
+        res.status(500).render("error", { message: "Error interno del servidor" });
+    }
+});
+
 export default router;

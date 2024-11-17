@@ -44,7 +44,11 @@ const isAuthenticated = (req, res, next) => {
     if (req.session && req.session.userId) {
         next();
     } else {
-        res.redirect('/login');
+        if (req.path === "/login" || req.path === "/register") {
+            next(); // Permite acceso a las páginas públicas
+        } else {
+            res.redirect('/login');
+        }
     }
 };
 
